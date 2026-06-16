@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const pool = require('./config/db');
 const cookieParser = require("cookie-parser");
 
+const authRoutes = require('./routes/auth.routes');
+const workspaceRoutes = require('./routes/workspace.routes');
+
 dotenv.config();
 
 const app = express();
@@ -14,7 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/auth', authRoutes);
+app.use('/api/workspaces', workspaceRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
