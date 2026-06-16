@@ -88,7 +88,7 @@ exports.login = async (req, res) => {
         const token = generateToken(user.rows[0]);
         sendToken(res, token);
 
-        res.status(200).json({ success: true, message: "User logged in successfully", user: user.rows[0] });
+        res.status(200).json({ success: true, message: "User logged in successfully", user: user.rows[0], token : token });
 
     } catch (error) {
         console.error(error);
@@ -108,4 +108,24 @@ exports.logout = (req, res) => {
         success: true,
         message: "Logged out successfully"
     });
+};
+
+// Get Profile of currently logged in user
+exports.getProfile = async (req, res) => {
+    try {
+        const user = await pool.query(
+            `SELECT id, name, email, role
+             FROM users
+             WHERE id = $1`,
+            [req.user.id]
+        );
+
+        res.status(200).json({
+            success: true,
+            user: user.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
 };
