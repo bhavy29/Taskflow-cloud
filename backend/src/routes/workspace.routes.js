@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { createWorkspace, getUserWorkspaces, getWorkspaceById } = require("../controllers/workspace.controller");
 const authMiddleware = require("../middleware/auth.middleware");
+const { createWorkspace, getUserWorkspaces, getWorkspaceById } = require("../controllers/workspace.controller");
 
 router.post("/", authMiddleware, createWorkspace);
 

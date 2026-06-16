@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 
 const authRoutes = require('./routes/auth.routes');
 const workspaceRoutes = require('./routes/workspace.routes');
+const taskRoutes = require('./routes/task.routes'); 
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
