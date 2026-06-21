@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth.middleware");
 const workspaceMiddleware = require("../middleware/workspace.middleware");
+const authorizeRole = require("../middleware/role.middleware");
 const { createTask, getWorkspaceTasks, getTaskById, updateTask, deleteTask } = require("../controllers/task.controller");
 
-router.post("/", authMiddleware,createTask);
-router.get("/workspace/:workspaceId", authMiddleware, workspaceMiddleware, getWorkspaceTasks);
+router.post("/", authMiddleware, authorizeRole("admin"),createTask);
+router.get("/workspace/:workspaceId", authMiddleware, authorizeRole("admin"), workspaceMiddleware, getWorkspaceTasks);
 router.get("/:taskId", authMiddleware, getTaskById);
 router.put("/:taskId", authMiddleware, updateTask);
-router.delete("/:taskId", authMiddleware, deleteTask);
+router.delete("/:taskId", authMiddleware, authorizeRole("admin"),deleteTask);
 
 module.exports = router;

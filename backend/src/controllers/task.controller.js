@@ -1,10 +1,10 @@
 const pool = require('../config/db');
 
 exports.createTask = async (req, res) => {
-    try{
+    try {
         const { title, description, status, workspace_id, deadline, assigned_to } = req.body;
 
-        if(!title || !title.trim()){
+        if (!title || !title.trim()) {
             return res.status(400).json({
                 success: false,
                 message: "Task title is required"
@@ -28,7 +28,7 @@ exports.createTask = async (req, res) => {
         });
 
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,
@@ -38,7 +38,7 @@ exports.createTask = async (req, res) => {
 };
 
 exports.getWorkspaceTasks = async (req, res) => {
-    try{
+    try {
         const { workspaceId } = req.params;
 
         const tasksResult = await pool.query(
@@ -52,7 +52,7 @@ exports.getWorkspaceTasks = async (req, res) => {
             tasks: tasksResult.rows
         });
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,
@@ -62,7 +62,7 @@ exports.getWorkspaceTasks = async (req, res) => {
 };
 
 exports.getTaskById = async (req, res) => {
-    try{
+    try {
         const { taskId } = req.params;
 
         const taskResult = await pool.query(
@@ -83,7 +83,7 @@ exports.getTaskById = async (req, res) => {
             task: taskResult.rows[0]
         });
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,
@@ -93,7 +93,28 @@ exports.getTaskById = async (req, res) => {
 };
 
 exports.updateTask = async (req, res) => {
-    try{
+    try {
+
+        if (req.user.role === "member") {
+
+            const task = await pool.query(
+                `SELECT assigned_to
+                FROM tasks
+                WHERE id = $1`,
+                [taskId]
+            );
+
+            if (
+                task.rows.length === 0 ||
+                task.rows[0].assigned_to !== req.user.id
+            ) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You can only update tasks assigned to you"
+                });
+            }
+        }
+
         const { taskId } = req.params;
         const { title, description, status, deadline, assigned_to } = req.body;
 
@@ -115,7 +136,7 @@ exports.updateTask = async (req, res) => {
             task: taskResult.rows[0]
         });
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,
@@ -125,7 +146,7 @@ exports.updateTask = async (req, res) => {
 };
 
 exports.deleteTask = async (req, res) => {
-    try{
+    try {
         const { taskId } = req.params;
 
         const taskResult = await pool.query(
@@ -146,7 +167,7 @@ exports.deleteTask = async (req, res) => {
             task: taskResult.rows[0]
         });
     }
-    catch(error){
+    catch (error) {
         console.error(error);
         return res.status(500).json({
             success: false,
