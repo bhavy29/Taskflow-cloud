@@ -17,7 +17,6 @@ const sendToken = (res, token) => {
         sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000
     });
-    console.log("Token sent in cookie:", token);
 };
 
 // User Registration
