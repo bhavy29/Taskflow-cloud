@@ -1,0 +1,16 @@
+:root {
+  --bg-primary: #F9F7F7;
+  --bg-secondary: #DBE2EF;
+
+  --primary: #3F72AF;
+  --primary-dark: #112D4E;
+
+  --text-primary: #112D4E;
+  --text-secondary: #3F72AF;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  font-family: Arial, sans-serif;
+}

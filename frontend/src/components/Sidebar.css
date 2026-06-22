@@ -1,0 +1,84 @@
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #112D4E;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo h2 {
+    margin: 0;
+    color: #F9F7F7;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.menu-item:hover {
+    background: #3F72AF;
+}
+
+.menu-item.active {
+    background: #3F72AF;
+}
+
+.profile-card {
+    background: rgba(255,255,255,0.08);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    background: #3F72AF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.profile-card h4 {
+    margin: 0;
+}
+
+.profile-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #DBE2EF;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.logout:hover {
+    background: #3F72AF;
+}

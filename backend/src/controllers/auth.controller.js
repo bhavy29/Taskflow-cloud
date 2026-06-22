@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 
 const generateToken = (user) => {
     return jwt.sign(
-        { id: user.id, role: user.role, email: user.email }, 
-        process.env.JWT_SECRET, 
+        { id: user.id, role: user.role, email: user.email },
+        process.env.JWT_SECRET,
         { expiresIn: '1d' }
     );
 }
@@ -17,6 +17,7 @@ const sendToken = (res, token) => {
         sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000
     });
+    console.log("Token sent in cookie:", token);
 };
 
 // User Registration
@@ -26,7 +27,7 @@ exports.register = async (req, res) => {
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
-        
+
         // Check if email already exists
         const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         if (existingUser.rows.length > 0) {
@@ -44,7 +45,7 @@ exports.register = async (req, res) => {
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
-        
+
         // Insert user into database
         const newUser = await pool.query(
             'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
@@ -66,6 +67,7 @@ exports.register = async (req, res) => {
 // User Login
 exports.login = async (req, res) => {
     const { email, password } = req.body;
+    console.log("Login attempt with email:", email);
     try {
         if (!email || !password) {
             res.status(400).json({ success: false, message: 'Email and password are required' });
@@ -87,8 +89,8 @@ exports.login = async (req, res) => {
         // Generate JWT token and send it in the response
         const token = generateToken(user.rows[0]);
         sendToken(res, token);
-
-        res.status(200).json({ success: true, message: "User logged in successfully", user: user.rows[0], token : token });
+        console.log("Login successful, token generated.");
+        res.status(200).json({ success: true, message: "User logged in successfully", user: user.rows[0], token: token });
 
     } catch (error) {
         console.error(error);

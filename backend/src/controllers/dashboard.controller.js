@@ -1,0 +1,62 @@
+const pool = require("../config/db");
+
+exports.getDashboardStats = async (req, res) => {
+    try {
+
+        const userId = req.user.id;
+
+        // Total Tasks
+        const totalTasks = await pool.query(
+            `SELECT COUNT(*) 
+             FROM tasks
+             WHERE assigned_to = $1`,
+            [userId]
+        );
+
+        // Completed Tasks
+        const completedTasks = await pool.query(
+            `SELECT COUNT(*)
+             FROM tasks
+             WHERE assigned_to = $1
+             AND status = 'Done'`,
+            [userId]
+        );
+
+        // Pending Tasks
+        const pendingTasks = await pool.query(
+            `SELECT COUNT(*)
+             FROM tasks
+             WHERE assigned_to = $1
+             AND status != 'Done'`,
+            [userId]
+        );
+
+        // Workspaces
+        const workspaces = await pool.query(
+            `SELECT COUNT(*)
+             FROM workspace_members
+             WHERE user_id = $1`,
+            [userId]
+        );
+
+        return res.status(200).json({
+            success: true,
+            stats: {
+                totalTasks: parseInt(totalTasks.rows[0].count),
+                completedTasks: parseInt(completedTasks.rows[0].count),
+                pendingTasks: parseInt(pendingTasks.rows[0].count),
+                workspaces: parseInt(workspaces.rows[0].count)
+            }
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+
+    }
+};
