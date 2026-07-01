@@ -175,3 +175,39 @@ exports.deleteTask = async (req, res) => {
         });
     }
 };
+
+exports.updateTaskStatus = async (req, res) => {
+    try {
+
+        const { taskId } = req.params;
+        const { status } = req.body;
+
+        const result = await pool.query(
+            `UPDATE tasks
+             SET status = $1
+             WHERE id = $2
+             RETURNING *`,
+            [status, taskId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Task not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            task: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};

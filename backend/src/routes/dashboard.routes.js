@@ -3,9 +3,7 @@ const router = express.Router();
 
 const authMiddleware = require("../middleware/auth.middleware");
 
-const {
-    getDashboardStats
-} = require("../controllers/dashboard.controller");
+const { getDashboardStats, getDashboardTasks } = require("../controllers/dashboard.controller");
 
 router.get(
     "/stats",
@@ -14,3 +12,9 @@ router.get(
 );
 
 module.exports = router;
+
+router.get(
+    "/tasks",
+    authMiddleware,
+    getDashboardTasks
+);

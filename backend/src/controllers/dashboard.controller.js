@@ -60,3 +60,39 @@ exports.getDashboardStats = async (req, res) => {
 
     }
 };
+
+// Only pending tasks
+exports.getDashboardTasks = async (req, res) => {
+    try {
+
+        const tasks = await pool.query(
+            `SELECT
+                id,
+                title,
+                description,
+                status,
+                deadline,
+                created_at
+             FROM tasks
+             WHERE assigned_to = $1 AND status != $2
+             ORDER BY created_at DESC`,
+            [req.user.id, "Done"]
+        );
+
+        return res.status(200).json({
+            success: true,
+            tasks: tasks.rows
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+
+    }
+};
+
