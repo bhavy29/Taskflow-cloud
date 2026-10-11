@@ -62,12 +62,20 @@
 
 .profile-card h4 {
     margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .profile-card p {
     margin: 0;
     font-size: 14px;
     color: #DBE2EF;
+    overflow-wrap: anywhere;
+}
+
+.profile-details {
+    min-width: 0;
 }
 
 .logout {

@@ -1,22 +1,42 @@
 
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
     FaHome,
     FaTasks,
     FaProjectDiagram,
-    FaUsers,
-    FaCalendarAlt,
-    FaComments,
-    FaChartLine,
-    FaCog,
+    // FaUsers,
+    // FaCalendarAlt,
+    // FaComments,
+    // FaChartLine,
+    // FaCog,
     FaSignOutAlt
 } from "react-icons/fa";
-import { logoutUser } from "../services/authService";
+import { getProfile, logoutUser } from "../services/authService";
 
 import "./Sidebar.css";
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        getProfile()
+            .then((response) => {
+                if (isMounted) {
+                    setUser(response.data.user);
+                }
+            })
+            .catch((error) => {
+                console.error("Failed to load profile:", error);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -27,6 +47,14 @@ const Sidebar = () => {
             navigate("/");
         }
     };
+
+    const displayName = user?.name?.trim() || "User";
+    const initials = displayName
+        .split(/\s+/)
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
 
     return (
         <div className="sidebar">
@@ -52,7 +80,7 @@ const Sidebar = () => {
                     <span>Projects</span>
                 </NavLink>
 
-                <div className="menu-item">
+                {/* <div className="menu-item">
                     <FaUsers />
                     <span>Team</span>
                 </div>
@@ -75,16 +103,16 @@ const Sidebar = () => {
                 <div className="menu-item">
                     <FaCog />
                     <span>Settings</span>
-                </div>
+                </div> */}
 
             </div>
 
             <div className="profile-card">
-                <div className="avatar">BC</div>
+                <div className="avatar">{user ? initials : "..."}</div>
 
-                <div>
-                    <h4>Bhavy</h4>
-                    <p>Team Leader</p>
+                <div className="profile-details">
+                    <h4>{user ? displayName : "Loading profile..."}</h4>
+                    {user?.email && <p>{user.email}</p>}
                 </div>
             </div>
 
