@@ -1,11 +1,16 @@
 import api from "./api";
 
-export const updateTask = async (taskId, status) => {
-    return api.put(
+export const getMyTasks = () =>
+    api.get("/tasks", { withCredentials: true }).then((response) => response.data);
+
+export const updateTask = async (taskId, payload) => {
+    const response = await api.put(
         `/tasks/${taskId}`,
-        { status },
+        payload,
         { withCredentials: true }
     );
+
+    return response.data;
 };
 
 export const updateTaskStatus = async (taskId, status) => {
@@ -15,7 +20,24 @@ export const updateTaskStatus = async (taskId, status) => {
         {
             withCredentials: true
         }
+    );  
+
+    return response.data;
+};
+
+export const createTask = async (taskData) => {
+    const response = await api.post(
+        `/tasks`,
+        taskData,
+        {
+            withCredentials: true
+        }
     );
 
+    return response.data;
+};
+
+export const deleteTask = async (taskId) => {
+    const response = await api.delete(`/tasks/${taskId}`, { withCredentials: true });
     return response.data;
 };

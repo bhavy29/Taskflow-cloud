@@ -61,6 +61,38 @@ exports.getDashboardStats = async (req, res) => {
     }
 };
 
+exports.getDashboardProjects = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const projects = await pool.query(
+            `SELECT
+                w.id,
+                w.name,
+                w.description,
+                w.created_at
+             FROM workspaces w
+             JOIN workspace_members wm
+                ON w.id = wm.workspace_id
+             WHERE wm.user_id = $1
+             ORDER BY w.created_at DESC
+             LIMIT 5`,
+            [userId]
+        );
+
+        return res.status(200).json({
+            success: true,
+            projects: projects.rows
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+
 // Only pending tasks
 exports.getDashboardTasks = async (req, res) => {
     try {

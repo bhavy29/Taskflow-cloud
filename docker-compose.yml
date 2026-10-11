@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: taskflow-backend
+    env_file:
+      - ./backend/.env
+    expose:
+      - "5000"
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: taskflow-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+networks:
+  taskflow-network:
+    driver: bridge

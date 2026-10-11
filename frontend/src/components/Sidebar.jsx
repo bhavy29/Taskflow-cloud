@@ -1,4 +1,5 @@
 
+import { NavLink, useNavigate } from "react-router-dom";
 import {
     FaHome,
     FaTasks,
@@ -10,10 +11,23 @@ import {
     FaCog,
     FaSignOutAlt
 } from "react-icons/fa";
+import { logoutUser } from "../services/authService";
 
 import "./Sidebar.css";
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            navigate("/");
+        }
+    };
+
     return (
         <div className="sidebar">
 
@@ -23,20 +37,20 @@ const Sidebar = () => {
 
             <div className="menu">
 
-                <div className="menu-item active">
+                <NavLink to="/dashboard" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <FaHome />
                     <span>Dashboard</span>
-                </div>
+                </NavLink>
 
-                <div className="menu-item">
+                <NavLink to="/tasks" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <FaTasks />
                     <span>My Tasks</span>
-                </div>
+                </NavLink>
 
-                <div className="menu-item">
+                <NavLink to="/workspaces" className={({ isActive }) => isActive ? "menu-item active" : "menu-item"}>
                     <FaProjectDiagram />
                     <span>Projects</span>
-                </div>
+                </NavLink>
 
                 <div className="menu-item">
                     <FaUsers />
@@ -74,7 +88,7 @@ const Sidebar = () => {
                 </div>
             </div>
 
-            <div className="logout">
+            <div className="logout" onClick={handleLogout}>
                 <FaSignOutAlt />
                 <span>Logout</span>
             </div>

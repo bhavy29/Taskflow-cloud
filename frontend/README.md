@@ -1,16 +1,57 @@
-# React + Vite
+# TaskFlow Cloud Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend for TaskFlow Cloud, a task and workspace management application. It is a single-page React app built with Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Register and sign in
+- View dashboard task and workspace statistics
+- Create and manage tasks
+- Browse workspaces and workspace details
+- Receive task updates through Socket.IO
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Vite 8
+- React Router
+- Axios
+- Socket.IO Client
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Node.js and npm
+- The TaskFlow Cloud backend running locally on port `5000`
+
+## Getting started
+
+From the `frontend` directory, install dependencies and start the development server:
+
+```sh
+npm install
+npm run dev
+```
+
+Open the local URL printed by Vite (usually `http://localhost:5173`).
+
+The frontend's API client currently sends requests to `http://localhost:5000/api` and includes credentials for cookie-based authentication. To use a backend at another address, update the API client's `baseURL` in `src/services/api.js`.
+
+The Socket.IO client currently connects to the frontend's own origin (`/`). Configure a development proxy or update `src/services/socket.js` if the backend socket server is hosted at a different origin.
+
+## Available scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Build the production assets into `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+
+## Production build
+
+```sh
+npm run build
+npm run preview
+```
+
+The generated static site is written to `dist/`. Configure your web server to serve the built files and route SPA paths (such as `/dashboard` and `/workspaces`) back to `index.html`.

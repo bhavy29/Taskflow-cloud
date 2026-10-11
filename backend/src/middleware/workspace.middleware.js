@@ -3,7 +3,7 @@ const pool = require("../config/db");
 const checkWorkspaceMember = async (req, res, next) => {
     try {
         const workspaceId =
-            req.params.workspaceId || req.body.workspace_id;
+            req.params.workspaceId || req.params.id || req.body.workspace_id;
 
         const memberCheck = await pool.query(
             `SELECT *

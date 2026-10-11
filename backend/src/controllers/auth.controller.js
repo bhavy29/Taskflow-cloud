@@ -2,6 +2,7 @@ const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// Helper function to generate JWT token
 const generateToken = (user) => {
     return jwt.sign(
         { id: user.id, role: user.role, email: user.email },
@@ -10,6 +11,7 @@ const generateToken = (user) => {
     );
 }
 
+// Helper function to send token in cookie
 const sendToken = (res, token) => {
     res.cookie('token', token, {
         httpOnly: true,
